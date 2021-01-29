@@ -1,25 +1,73 @@
-const business = { start: 9, end: 18 }
-var dt = DateTime.local();
+//https://stackoverflow.com/questions/29454824/how-to-get-time-using-moment-js
+var appointText = "";
+var appointTime = "";
+var currentDate;
+var currentTime;
+var currentContainer;
+var tempArray = [];
+var storedAppointments;
+var returnedAppointments;
 
-// Add the current date to top of screen
-//https://moment.github.io/luxon/docs/manual/tour.html#your-first-datetime
-dt = DateTime.
+$(document).ready(function () {
+    currentDate = moment().format("dddd MMM Do YYYY, h:mm a");
+    $("#currentDay").append(currentDate);
+    currentTime = moment().format("H");
+})
 
-    // Get the current hour
+$(".saveBtn").click(function () {
+    appointText = $(this).parent('div').children('div').children('textarea').val();
+    appointTime = $(this).parent('div').parent().attr("id");
+    appointment = {
+        time: appointTime,
+        details: appointText
+    }
+    tempArray = JSON.parse(localStorage.getItem("appointments"));
+    if (tempArray === null) {
+        localStorage.setItem('appointments', JSON.stringify([{ time: appointTime, details: appointText }]));
+    }
+    else {
+        tempArray.push(appointment);
+        localStorage.setItem("appointments", JSON.stringify(tempArray));
+
+    }
+    $(this).parent('div').children('div').children('textarea').replaceWith($('<textarea>' + appointText.addClass("textarea") + '</textarea>'));
+})
+
+function renderAppointments() {
+    storedAppointments = JSON.parse(localStorage.getItem("appointments"));
+    if (storedAppointments !== null) {
+        for (i = 0; i < storedAppointments.length; i++) {
+            returnedAppointments = storedAppointments[i];
+            details = returnedAppointments.details;
+            timeIndex = returnedAppointments.time;
+            timeIndex = timeIndex.replace(":00", '');
+            if (details !== null) {
+                $("#" + timeIndex).children('div').children('div').children('textarea').val(details);
+            }
+        }
+    }
+}
+
+renderAppointments();
+
+for (i = 0; i <= 23; i++) {
+    CurrentContainer = i;
+    if (currentTime == i) {
+        $('#' + CurrentContainer).addClass("present");
+        $('#' + CurrentContainer).children('div').children('div').children("textarea").addClass("present");
+    }
+    else if (currentTime > i) {
+        $('#' + CurrentContainer).addClass("past");
+        $('#' + CurrentContainer).children('div').children('div').children("textarea").addClass("past");
+    }
+    else {
+        $('#' + CurrentContainer).addClass("future");
+        $('#' + CurrentContainer).children('div').children('div').children("textarea").addClass("future");
+    }
+}
 
 
-    // Get values from local storage
-
-
-    // Build the time slots
 
 
 
 
-    // Update display at the start of the next hour
-
-
-    // Get the current hour
-
-
-    // Update each color
